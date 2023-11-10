@@ -1,6 +1,11 @@
 defmodule KdriveBridgeWeb.Router do
   use KdriveBridgeWeb, :router
 
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :put_secure_browser_headers
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -25,5 +30,11 @@ defmodule KdriveBridgeWeb.Router do
 
       live_dashboard "/dashboard", metrics: KdriveBridgeWeb.Telemetry
     end
+  end
+
+  scope "/", KdriveBridgeWeb do
+    pipe_through :browser
+
+    get "/*path", MainController, :index
   end
 end

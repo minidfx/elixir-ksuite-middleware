@@ -3,6 +3,12 @@ defmodule KdriveBridgeWeb.MainController do
 
   alias KdriveBridge.KdriveClient
 
+  def index(conn, _params) do
+    conn
+    |> put_resp_header("content-type", "text/html; charset=utf-8")
+    |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
+  end
+
   def pass_thru(conn, %{"file_id" => id}) when is_integer(id) do
     with {:ok, response} <- KdriveClient.download(id) do
       conn |> put_tesla_response(response)
