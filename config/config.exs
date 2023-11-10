@@ -8,9 +8,7 @@
 import Config
 
 config :kdrive_bridge,
-  generators: [timestamp_type: :utc_datetime],
-  kdrive_id: "",
-  kdrive_api_token: ""
+  generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
 config :kdrive_bridge, KdriveBridgeWeb.Endpoint,

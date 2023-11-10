@@ -50,6 +50,11 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :kdrive_bridge,
+    generators: [timestamp_type: :utc_datetime],
+    kdrive_id: System.get_env("KDRIVE_ID") || raise("The KDRIVE_ID variable was missing"),
+    kdrive_api_token: System.get_env("KDRIVE_API_TOKEN") || raise("The KDRIVE_API_TOKEN variable was missing")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
