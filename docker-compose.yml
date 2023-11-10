@@ -1,0 +1,12 @@
+version: '3'
+services:
+  kdrive-bridge:
+    build: .
+    image: minidfx/kdrive-bridge:v0.1.0
+    environment:
+      - SECRET_KEY_BASE=<secret>
+      - PHX_HOST=<host>
+      - KDRIVE_ID=<id>
+      - KDRIVE_API_TOKEN=<token>
+    ports:
+      - 4000:4000
