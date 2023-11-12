@@ -10,6 +10,12 @@ defmodule KdriveBridgeWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", KdriveBridgeWeb do
+    pipe_through :browser
+
+    get "/", MainController, :index
+  end
+
   scope "/files", KdriveBridgeWeb do
     pipe_through :api
 
@@ -35,6 +41,6 @@ defmodule KdriveBridgeWeb.Router do
   scope "/", KdriveBridgeWeb do
     pipe_through :browser
 
-    get "/*path", MainController, :index
+    get "/*path", MainController, :not_found
   end
 end

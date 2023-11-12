@@ -3,11 +3,17 @@ defmodule KdriveBridgeWeb.MainController do
 
   alias KdriveBridge.KdriveClient
 
-  def index(conn, _params) do
-    conn
-    |> put_resp_header("content-type", "text/html; charset=utf-8")
-    |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
-  end
+  def index(conn, _params),
+    do:
+      conn
+      |> put_resp_header("content-type", "text/html; charset=utf-8")
+      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
+
+  def not_found(conn, _params),
+    do:
+      conn
+      |> put_resp_header("content-type", "text/html; charset=utf-8")
+      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/not-found.html"))
 
   def pass_thru(conn, %{"file_id" => id}) when is_integer(id) do
     with {:ok, response} <- KdriveClient.download(id) do
@@ -27,9 +33,14 @@ defmodule KdriveBridgeWeb.MainController do
     end
   end
 
-  def pass_thru(conn, _params) do
-    conn |> resp(400, "The file id was missing.")
-  end
+  def pass_thru(conn, _params),
+    do: conn |> resp(400, "The file id was missing.")
+
+  defp put_tesla_response(%Plug.Conn{} = conn, %Tesla.Env{status: 401}),
+    do:
+      conn
+      |> put_resp_header("content-type", "text/html; charset=utf-8")
+      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/bad-api-key.html"))
 
   defp put_tesla_response(%Plug.Conn{} = conn, %Tesla.Env{} = response) do
     %Tesla.Env{status: status, body: body} = response

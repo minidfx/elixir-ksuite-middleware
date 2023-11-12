@@ -51,3 +51,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :kdrive_bridge,
+  kdrive_id: System.get_env("KDRIVE_ID") || raise("The KDRIVE_ID variable was missing"),
+  kdrive_api_token: System.get_env("KDRIVE_API_TOKEN") || raise("The KDRIVE_API_TOKEN variable was missing")
