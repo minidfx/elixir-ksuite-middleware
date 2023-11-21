@@ -7,7 +7,7 @@ defmodule KdriveBridgeWeb.MainController do
     do:
       conn
       |> put_resp_header("content-type", "text/html; charset=utf-8")
-      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
+      |> send_file(200, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
 
   def not_found(conn, _params),
     do:
