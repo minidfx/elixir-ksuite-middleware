@@ -4,7 +4,7 @@ defmodule KsuiteMiddleware.MixProject do
   def project do
     [
       app: :ksuite_middleware,
-      version: "0.4.0",
+      version: "0.5.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -40,7 +40,10 @@ defmodule KsuiteMiddleware.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:tesla, "~> 1.4"},
-      {:hackney, "~> 1.17"}
+      {:hackney, "~> 1.17"},
+      {:caldav_client, "~> 2.0"},
+      {:icalendar, "~> 1.1.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 

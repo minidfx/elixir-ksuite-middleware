@@ -22,6 +22,12 @@ defmodule KsuiteMiddlewareWeb.Router do
     get "/:file_id", KdriveController, :pass_thru
   end
 
+  scope "/calendars", KsuiteMiddlewareWeb do
+    pipe_through :api
+
+    get "/:calendar_id", CalendarController, :get_events
+  end
+
   # Enable LiveDashboard in development
   if Application.compile_env(:ksuite_middleware, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put

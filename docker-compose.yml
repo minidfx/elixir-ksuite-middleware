@@ -2,12 +2,16 @@ version: '3'
 services:
   ksuite-middleware:
     build: .
-    image: minidfx/ksuite-middleware:v0.4.0
+    image: minidfx/ksuite-middleware:v0.5.0
     environment:
       - SECRET_KEY_BASE=<secret>
       - PHX_HOST=<host>
       - PORT=<port>
       - KDRIVE_ID=<id>
       - KSUITE_API_TOKEN=<token>
+      - CALDAV_USERNAME=<username>
+      - CALDAV_PASSWORD=<password>
+      - CALDAV_SERVER=<server>
+      - TIMEZONE=<tz>
     ports:
       - 4000:4000

@@ -14,7 +14,8 @@ defmodule KsuiteMiddleware.Application do
       # Start a worker by calling: KsuiteMiddleware.Worker.start_link(arg)
       # {KsuiteMiddleware.Worker, arg},
       # Start to serve requests, typically the last entry
-      KsuiteMiddlewareWeb.Endpoint
+      KsuiteMiddlewareWeb.Endpoint,
+      KsuiteMiddleware.State
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

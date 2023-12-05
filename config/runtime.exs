@@ -51,8 +51,12 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 
   config :ksuite_middleware,
-    kdrive_id: System.get_env("KDRIVE_ID") || raise("The KDRIVE_ID variable was missing"),
-    ksuite_api_token: System.get_env("KSUITE_API_TOKEN") || raise("The KSUITE_API_TOKEN variable was missing")
+    kdrive_id: System.get_env("KDRIVE_ID") || raise("The KDRIVE_ID environment variable was missing"),
+    ksuite_api_token: System.get_env("KSUITE_API_TOKEN") || raise("The KSUITE_API_TOKEN venvironment ariable was missing"),
+    caldav_username: System.get_env("CALDAV_USERNAME") || raise("The CALDAV_USERNAME environment variable was missing"),
+    caldav_password: System.get_env("CALDAV_PASSWORD") || raise("The CALDAV_PASSWORD environment variable was missing"),
+    caldav_server: System.get_env("CALDAV_SERVER") || raise("The CALDAV_SERVER environment variable was missing"),
+    timezone: System.get_env("TIMEZONE") || raise("The TIMEZONE environment variable was missing")
 
   # ## SSL Support
   #
