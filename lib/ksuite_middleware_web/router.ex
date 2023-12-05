@@ -19,7 +19,7 @@ defmodule KsuiteMiddlewareWeb.Router do
   scope "/files", KsuiteMiddlewareWeb do
     pipe_through :api
 
-    get "/:file_id", MainController, :pass_thru
+    get "/:file_id", KdriveController, :pass_thru
   end
 
   # Enable LiveDashboard in development
@@ -41,6 +41,6 @@ defmodule KsuiteMiddlewareWeb.Router do
   scope "/", KsuiteMiddlewareWeb do
     pipe_through :browser
 
-    get "/*path", MainController, :not_found
+    get "/*path", ErrorController, :not_found
   end
 end
