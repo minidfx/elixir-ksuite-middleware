@@ -1,4 +1,4 @@
-defmodule KdriveBridgeWeb.ErrorJSON do
+defmodule KsuiteMiddlewareWeb.ErrorJSON do
   # If you want to customize a particular status code,
   # you may add your own clauses, such as:
   #

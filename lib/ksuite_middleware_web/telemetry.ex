@@ -1,4 +1,4 @@
-defmodule KdriveBridgeWeb.Telemetry do
+defmodule KsuiteMiddlewareWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -63,7 +63,7 @@ defmodule KdriveBridgeWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {KdriveBridgeWeb, :count_users, []}
+      # {KsuiteMiddlewareWeb, :count_users, []}
     ]
   end
 end

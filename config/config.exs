@@ -7,18 +7,18 @@
 # General application configuration
 import Config
 
-config :kdrive_bridge,
+config :ksuite_middleware,
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :kdrive_bridge, KdriveBridgeWeb.Endpoint,
+config :ksuite_middleware, KsuiteMiddlewareWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
-    formats: [json: KdriveBridgeWeb.ErrorJSON],
+    formats: [json: KsuiteMiddlewareWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: KdriveBridge.PubSub,
+  pubsub_server: KsuiteMiddleware.PubSub,
   live_view: [signing_salt: "7nfCI6sX"]
 
 # Configures Elixir's Logger

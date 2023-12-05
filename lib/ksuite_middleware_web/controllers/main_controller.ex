@@ -1,22 +1,22 @@
-defmodule KdriveBridgeWeb.MainController do
-  use KdriveBridgeWeb, :controller
+defmodule KsuiteMiddlewareWeb.MainController do
+  use KsuiteMiddlewareWeb, :controller
 
-  alias KdriveBridge.KdriveClient
+  alias KsuiteMiddleware.KsuiteClient
 
   def index(conn, _params),
     do:
       conn
       |> put_resp_header("content-type", "text/html; charset=utf-8")
-      |> send_file(200, Application.app_dir(:kdrive_bridge, "priv/static/index.html"))
+      |> send_file(200, Application.app_dir(:ksuite_middleware, "priv/static/index.html"))
 
   def not_found(conn, _params),
     do:
       conn
       |> put_resp_header("content-type", "text/html; charset=utf-8")
-      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/not-found.html"))
+      |> send_file(404, Application.app_dir(:ksuite_middleware, "priv/static/not-found.html"))
 
   def pass_thru(conn, %{"file_id" => id}) when is_integer(id) do
-    with {:ok, response} <- KdriveClient.download(id) do
+    with {:ok, response} <- KsuiteClient.download(id) do
       conn |> put_tesla_response(response)
     else
       _ -> conn |> resp(500, "an unknown error occurred.")
@@ -25,7 +25,7 @@ defmodule KdriveBridgeWeb.MainController do
 
   def pass_thru(conn, %{"file_id" => raw_id}) do
     with {file_id, _} <- Integer.parse(raw_id),
-         {:ok, response} <- KdriveClient.download(file_id) do
+         {:ok, response} <- KsuiteClient.download(file_id) do
       conn |> put_tesla_response(response)
     else
       _ ->
@@ -40,7 +40,7 @@ defmodule KdriveBridgeWeb.MainController do
     do:
       conn
       |> put_resp_header("content-type", "text/html; charset=utf-8")
-      |> send_file(404, Application.app_dir(:kdrive_bridge, "priv/static/bad-api-key.html"))
+      |> send_file(404, Application.app_dir(:ksuite_middleware, "priv/static/bad-api-key.html"))
 
   defp put_tesla_response(%Plug.Conn{} = conn, %Tesla.Env{} = response) do
     %Tesla.Env{status: status, body: body} = response

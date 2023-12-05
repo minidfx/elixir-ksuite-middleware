@@ -1,12 +1,12 @@
-defmodule KdriveBridgeWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :kdrive_bridge
+defmodule KsuiteMiddlewareWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :ksuite_middleware
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_kdrive_bridge_key",
+    key: "_ksuite_middleware_key",
     signing_salt: "xJIdm2OH",
     same_site: "Lax"
   ]
@@ -19,9 +19,9 @@ defmodule KdriveBridgeWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :kdrive_bridge,
+    from: :ksuite_middleware,
     gzip: false,
-    only: KdriveBridgeWeb.static_paths()
+    only: KsuiteMiddlewareWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -44,5 +44,5 @@ defmodule KdriveBridgeWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug KdriveBridgeWeb.Router
+  plug KsuiteMiddlewareWeb.Router
 end

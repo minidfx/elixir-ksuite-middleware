@@ -1,13 +1,13 @@
 version: '3'
 services:
-  kdrive-bridge:
+  ksuite-middleware:
     build: .
-    image: minidfx/kdrive-bridge:v0.3.0
+    image: minidfx/ksuite-middleware:v0.4.0
     environment:
       - SECRET_KEY_BASE=<secret>
       - PHX_HOST=<host>
       - PORT=<port>
       - KDRIVE_ID=<id>
-      - KDRIVE_API_TOKEN=<token>
+      - KSUITE_API_TOKEN=<token>
     ports:
       - 4000:4000

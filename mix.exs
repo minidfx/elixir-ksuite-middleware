@@ -1,10 +1,10 @@
-defmodule KdriveBridge.MixProject do
+defmodule KsuiteMiddleware.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :kdrive_bridge,
-      version: "0.3.0",
+      app: :ksuite_middleware,
+      version: "0.4.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -18,7 +18,7 @@ defmodule KdriveBridge.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {KdriveBridge.Application, []},
+      mod: {KsuiteMiddleware.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

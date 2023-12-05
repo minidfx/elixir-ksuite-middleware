@@ -1,12 +1,12 @@
-defmodule KdriveBridgeWeb do
+defmodule KsuiteMiddlewareWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use KdriveBridgeWeb, :controller
-      use KdriveBridgeWeb, :html
+      use KsuiteMiddlewareWeb, :controller
+      use KsuiteMiddlewareWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -39,7 +39,7 @@ defmodule KdriveBridgeWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: KdriveBridgeWeb.Layouts]
+        layouts: [html: KsuiteMiddlewareWeb.Layouts]
 
       import Plug.Conn
 
@@ -50,9 +50,9 @@ defmodule KdriveBridgeWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: KdriveBridgeWeb.Endpoint,
-        router: KdriveBridgeWeb.Router,
-        statics: KdriveBridgeWeb.static_paths()
+        endpoint: KsuiteMiddlewareWeb.Endpoint,
+        router: KsuiteMiddlewareWeb.Router,
+        statics: KsuiteMiddlewareWeb.static_paths()
     end
   end
 

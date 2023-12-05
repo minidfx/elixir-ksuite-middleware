@@ -12,12 +12,12 @@ import Config
 # If you use `mix release`, you need to explicitly enable the server
 # by passing the PHX_SERVER=true when you start it:
 #
-#     PHX_SERVER=true bin/kdrive_bridge start
+#     PHX_SERVER=true bin/ksuite_middleware start
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 if System.get_env("PHX_SERVER") do
-  config :kdrive_bridge, KdriveBridgeWeb.Endpoint, server: true
+  config :ksuite_middleware, KsuiteMiddlewareWeb.Endpoint, server: true
 end
 
 if config_env() == :prod do
@@ -36,9 +36,9 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
-  config :kdrive_bridge, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  config :ksuite_middleware, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
-  config :kdrive_bridge, KdriveBridgeWeb.Endpoint,
+  config :ksuite_middleware, KsuiteMiddlewareWeb.Endpoint,
     url: [host: host, port: 443, scheme: "http"],
     http: [
       # Enable IPv6 and bind on all interfaces.
@@ -50,16 +50,16 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
-  config :kdrive_bridge,
+  config :ksuite_middleware,
     kdrive_id: System.get_env("KDRIVE_ID") || raise("The KDRIVE_ID variable was missing"),
-    kdrive_api_token: System.get_env("KDRIVE_API_TOKEN") || raise("The KDRIVE_API_TOKEN variable was missing")
+    ksuite_api_token: System.get_env("KSUITE_API_TOKEN") || raise("The KSUITE_API_TOKEN variable was missing")
 
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :kdrive_bridge, KdriveBridgeWeb.Endpoint,
+  #     config :ksuite_middleware, KsuiteMiddlewareWeb.Endpoint,
   #       https: [
   #         ...,
   #         port: 443,
@@ -81,7 +81,7 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your endpoint, ensuring
   # no data is ever sent via http, always redirecting to https:
   #
-  #     config :kdrive_bridge, KdriveBridgeWeb.Endpoint,
+  #     config :ksuite_middleware, KsuiteMiddlewareWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.

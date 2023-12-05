@@ -1,7 +1,7 @@
-defmodule KdriveBridgeWeb.HomeControllerTest do
-  use KdriveBridgeWeb.ConnCase
+defmodule KsuiteMiddlewareWeb.HomeControllerTest do
+  use KsuiteMiddlewareWeb.ConnCase
 
-  import KdriveBridge.HomewFixtures
+  import KsuiteMiddleware.HomewFixtures
 
   @create_attrs %{test: "some test"}
   @update_attrs %{test: "some updated test"}

@@ -1,5 +1,5 @@
-defmodule KdriveBridgeWeb.Router do
-  use KdriveBridgeWeb, :router
+defmodule KsuiteMiddlewareWeb.Router do
+  use KsuiteMiddlewareWeb, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,20 +10,20 @@ defmodule KdriveBridgeWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", KdriveBridgeWeb do
+  scope "/", KsuiteMiddlewareWeb do
     pipe_through :browser
 
     get "/", MainController, :index
   end
 
-  scope "/files", KdriveBridgeWeb do
+  scope "/files", KsuiteMiddlewareWeb do
     pipe_through :api
 
     get "/:file_id", MainController, :pass_thru
   end
 
   # Enable LiveDashboard in development
-  if Application.compile_env(:kdrive_bridge, :dev_routes) do
+  if Application.compile_env(:ksuite_middleware, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
     # it behind authentication and allow only admins to access it.
     # If your application does not have an admins-only section yet,
@@ -34,11 +34,11 @@ defmodule KdriveBridgeWeb.Router do
     scope "/dev" do
       pipe_through [:fetch_session, :protect_from_forgery]
 
-      live_dashboard "/dashboard", metrics: KdriveBridgeWeb.Telemetry
+      live_dashboard "/dashboard", metrics: KsuiteMiddlewareWeb.Telemetry
     end
   end
 
-  scope "/", KdriveBridgeWeb do
+  scope "/", KsuiteMiddlewareWeb do
     pipe_through :browser
 
     get "/*path", MainController, :not_found
