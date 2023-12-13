@@ -1,6 +1,8 @@
 # Ksuite-middleware
 
-Project providing a single endpoint with a single API configuration to access to many resources from a KSuite environment.
+Project providing a single endpoint to access to many resources from a KSuite environment. Currently the middleware supports only kDrive files and the calendar events.
+
+![](diagram.png)
 
 ## Kdrive
 
@@ -47,7 +49,9 @@ services:
       - 4000:4000
 ```
 
-## Running with Docker (recommended way)
+## Installation
+
+### Running with [Docker](https://hub.docker.com/repository/docker/minidfx/ksuite-middleware) (recommended way)
 
 With Docker, running the application is a breeze. Simply update the environment variables SECRET_KEY_BASE, PHX_HOST, KDRIVE_ID, and KSUITE_API_TOKEN. Then, run it to kickstart the application.
 
@@ -55,6 +59,23 @@ With Docker, running the application is a breeze. Simply update the environment 
 docker-compose up
 ```
 
+### Clone this project and run it
+
+1. Build it
+
+```bash
+export MIX_ENV=prod
+mix deps.get && mix deps.compile && mix release
+```
+
+2. Set the environment variables
+
+3. Run it!
+
+```bash
+_build/prod/rel/ksuite_middleware/bin/ksuite_middleware start
+```
+
 ## Security considerations
 
-This application doesn't offer any security layers or authentication. I suggest using a [proxy](https://docs.linuxserver.io/general/swag/) for TLS termination and authentication in front of the container. Make sure to protect this resource by yourself.
+This application doesn't offer any security layers or authentication. Use this middleware behind a proxy like [swag](https://docs.linuxserver.io/general/swag/), [traefik](https://traefik.io/traefik) or any equivalent proxy.
