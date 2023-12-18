@@ -5,7 +5,7 @@ defmodule KsuiteMiddleware.KsuiteClient do
 
   require Logger
 
-  plug Tesla.Middleware.BaseUrl, "https://api.infomaniak.com"
+  plug Tesla.Middleware.BaseUrl, State.get_ksuite_api_server()
   plug Tesla.Middleware.Logger, debug: false
   plug Tesla.Middleware.PathParams
   plug Tesla.Middleware.Headers, [{"User-Agent", "ksuite-middleware"}]

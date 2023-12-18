@@ -7,12 +7,21 @@ defmodule KsuiteMiddlewareWeb.CalendarController do
 
   require Logger
 
+  action_fallback KsuiteMiddleware.FallbackController
+
   def get_events(conn, %{"from" => from, "to" => to, "calendar_id" => calendar_id}),
     do:
       parse_params(from, to, calendar_id)
       |> then(&read_events/1)
       |> then(&translate_to_events/1)
       |> then(&send_response(conn, &1))
+
+  def get_events(conn, _),
+    do:
+      conn
+      |> put_status(:bad_request)
+      |> put_resp_content_type("application/problem+json")
+      |> render(:"400", reason: "The arguments were missing.")
 
   # Private
 
@@ -28,19 +37,28 @@ defmodule KsuiteMiddlewareWeb.CalendarController do
     client |> CalDAVClient.Event.get_events(calendar_url, from, to)
   end
 
-  defp send_response(conn, {:ok, events}), do: json(conn, events)
+  defp send_response(conn, {:ok, events}),
+    do: render(conn, :events, events: events)
 
-  defp send_response(conn, {:error, error, reason}),
+  defp send_response(conn, {:error, :bad_request, reason}),
     do:
       conn
-      |> put_status(error)
-      |> json(%{reason: reason})
+      |> put_status(:bad_request)
+      |> put_resp_content_type("application/problem+json")
+      |> render(:"400", reason: reason)
+
+  defp send_response(conn, {:error, :not_found, reason}),
+    do:
+      conn
+      |> put_status(:not_found)
+      |> put_resp_content_type("application/problem+json")
+      |> render(:"404", reason: reason)
 
   defp send_response(conn, {:error, reason}),
     do:
       conn
-      |> put_status(500)
-      |> json(%{reason: reason})
+      |> put_status(:internal_server_error)
+      |> render(:"500", reason: reason)
 
   defp parse_params(from, to, calendar_id) do
     Logger.info("Parsing the arguments ...")
@@ -50,9 +68,10 @@ defmodule KsuiteMiddlewareWeb.CalendarController do
          {:ok, calendar_id} <- parse_calendar_id(calendar_id) do
       {:ok, from, to, calendar_id}
     else
-      :invalid_to -> {:error, :bad_request, "The argument 'to' was invalid."}
-      :invalid_from -> {:error, :bad_request, "The argument 'from' was invalid."}
+      {:invalid_to, reason} -> {:error, :bad_request, "The argument 'to' was invalid. #{reason}"}
+      {:invalid_from, reason} -> {:error, :bad_request, "The argument 'from' was invalid. #{reason}"}
       {:invalid_calendar_id, reason} -> {:error, :bad_request, reason}
+      _ -> {:error, :internal_server_error, "Unhandled error occured"}
     end
   end
 
@@ -60,18 +79,20 @@ defmodule KsuiteMiddlewareWeb.CalendarController do
   defp parse_calendar_id(_), do: {:invalid_calendar_id, "The calendar_id was too long."}
 
   defp parse_datetime(error_atom, datetime) when is_atom(error_atom) and is_bitstring(datetime) do
-    case Timex.parse!(datetime, "{ISO:Extended:Z}") do
-      %DateTime{} = x -> {:ok, x}
-      _ -> error_atom
+    case Timex.parse(datetime, "{ISO:Extended:Z}") do
+      {:ok, %DateTime{} = x} -> {:ok, x}
+      {:error, reason} -> {error_atom, reason}
     end
   end
 
-  defp translate_to_events({:error, :unauthorized}), do: {:error, :unauthorized, "Unauthorized access to the CalDAV server, double check your credentials."}
+  defp translate_to_events({:error, :unauthorized}),
+    do: {:error, :unauthorized, "Unauthorized access to the CalDAV server, double check your credentials."}
+
   defp translate_to_events({:error, :not_found}), do: {:error, :not_found, "The given calendar_id was not found in the given server CalDAV."}
   defp translate_to_events({:error, reason}), do: {:error, reason}
   defp translate_to_events({:error, error, reason}), do: {:error, error, reason}
   defp translate_to_events({:ok, []}), do: {:ok, []}
-  defp translate_to_events({:ok, icalendar_events}), do: translate_to_events(icalendar_events, [])
+  defp translate_to_events({:ok, [%CalDAVClient.Event{} | _] = icalendar_events}), do: translate_to_events(icalendar_events, [])
   defp translate_to_events([], acc) when is_list(acc), do: {:ok, acc}
 
   defp translate_to_events([head | tail], acc) when is_list(acc) do
@@ -83,7 +104,12 @@ defmodule KsuiteMiddlewareWeb.CalendarController do
     from = translate_date_to_utc(from)
     to = translate_date_to_utc(to)
 
-    new_event = %KsuiteCalendarEvent{subject: summary, from: Timex.format!(from, "{ISO:Extended:Z}"), to: Timex.format!(to, "{ISO:Extended:Z}"), description: description}
+    new_event = %KsuiteCalendarEvent{
+      subject: summary,
+      from: Timex.format!(from, "{ISO:Extended:Z}"),
+      to: Timex.format!(to, "{ISO:Extended:Z}"),
+      description: description
+    }
 
     translate_to_events(tail, [new_event | acc])
   end

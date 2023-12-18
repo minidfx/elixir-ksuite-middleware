@@ -3,11 +3,16 @@ defmodule KsuiteMiddlewareWeb.KdriveController do
 
   alias KsuiteMiddleware.KsuiteClient
 
+  action_fallback KsuiteMiddleware.FallbackController
+
   def pass_thru(conn, %{"file_id" => id}) when is_integer(id) do
     with {:ok, response} <- KsuiteClient.download(id) do
       conn |> put_tesla_response(response)
     else
-      _ -> conn |> resp(500, "an unknown error occurred.")
+      _ ->
+        conn
+        |> put_status(:bad_gateway)
+        |> render(:"500")
     end
   end
 
@@ -16,21 +21,41 @@ defmodule KsuiteMiddlewareWeb.KdriveController do
          {:ok, response} <- KsuiteClient.download(file_id) do
       conn |> put_tesla_response(response)
     else
+      :error ->
+        conn
+        |> put_status(:bad_request)
+        |> put_resp_content_type("application/problem+json")
+        |> render(:"400", reason: :invalid_integer)
+
+      {:error, _} ->
+        conn
+        |> put_status(:bad_gateway)
+        |> put_resp_content_type("application/problem+json")
+        |> render(:"502", reason: :invalid_response_from_api)
+
       _ ->
-        conn |> resp(500, "an unknown error occurred.")
+        conn
+        |> put_status(:internal_server_error)
+        |> put_resp_content_type("application/problem+json")
+        |> render(:"500", reason: :unknown)
     end
   end
 
   def pass_thru(conn, _params),
-    do: conn |> resp(400, "The file id was missing.")
+    do:
+      conn
+      |> put_status(:bad_request)
+      |> put_resp_content_type("application/problem+json")
+      |> render(:"400", reason: :missing_file_id)
 
   # Private
 
   defp put_tesla_response(%Plug.Conn{} = conn, %Tesla.Env{status: 401}),
     do:
       conn
-      |> put_resp_header("content-type", "text/html; charset=utf-8")
-      |> send_file(400, Application.app_dir(:ksuite_middleware, "priv/static/bad-api-key.html"))
+      |> put_status(:bad_request)
+      |> put_resp_content_type("application/problem+json")
+      |> render(:"400", reason: :bad_api_key)
 
   defp put_tesla_response(%Plug.Conn{} = conn, %Tesla.Env{} = response) do
     %Tesla.Env{status: status, body: body} = response
@@ -42,7 +67,8 @@ defmodule KsuiteMiddlewareWeb.KdriveController do
     else
       _ ->
         conn
-        |> resp(status, body)
+        |> put_status(status)
+        |> render(status |> Integer.to_string() |> String.to_atom())
     end
   end
 

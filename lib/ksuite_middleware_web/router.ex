@@ -43,10 +43,4 @@ defmodule KsuiteMiddlewareWeb.Router do
       live_dashboard "/dashboard", metrics: KsuiteMiddlewareWeb.Telemetry
     end
   end
-
-  scope "/", KsuiteMiddlewareWeb do
-    pipe_through :browser
-
-    get "/*path", ErrorController, :not_found
-  end
 end

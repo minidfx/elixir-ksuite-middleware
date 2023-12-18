@@ -18,6 +18,9 @@ defmodule KsuiteMiddleware.State do
   @spec get_timezone() :: Timex.TimezoneInfo.t()
   def get_timezone(), do: GenServer.call(State, :get_timezone)
 
+  @spec get_ksuite_api_server() :: String.t()
+  def get_ksuite_api_server(), do: "https://api.infomaniak.com"
+
   # Callbacks
 
   @impl true
