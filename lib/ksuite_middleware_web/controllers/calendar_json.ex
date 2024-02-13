@@ -1,7 +1,5 @@
 defmodule KsuiteMiddlewareWeb.CalendarJSON do
-  alias KsuiteMiddlewareWeb.Models.KsuiteCalendarEvent
-
-  def events(%{events: [%KsuiteCalendarEvent{} | _] = events}), do: events
+  def events(%{events: events}), do: events
 
   def render("400.json", %{reason: reason}),
     do: %{title: "invalid argument", status: 400, detail: reason}
